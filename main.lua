@@ -1,5 +1,5 @@
 debug = true
-player = { x = 200, y = 710, speed = 150, img = nil }
+player = { x = 200, y = 710, speed = 200, img = nil }
 
 
 -- Collision detection taken function from http://love2d.org/wiki/BoundingBox.lua
@@ -12,8 +12,10 @@ function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
          y1 < y2+h2 and
          y2 < y1+h1
 end
--- Timers
--- We declare these here so we don't have to edit them multiple places
+
+
+isAlive = true
+score = 0
 canShoot = true
 canShootTimerMax = 0.2 
 canShootTimer = canShootTimerMax
@@ -90,6 +92,25 @@ for i, enemy in ipairs(enemies) do
 
   if enemy.y > 850 then -- remove enemies when they pass off the screen
     table.remove(enemies, i)
+  end
+end
+
+-- run our collision detection
+-- Since there will be fewer enemies on screen than bullets we'll loop them first
+-- Also, we need to see if the enemies hit our player
+for i, enemy in ipairs(enemies) do
+  for j, bullet in ipairs(bullets) do
+    if CheckCollision(enemy.x, enemy.y, enemy.img:getWidth(), enemy.img:getHeight(), bullet.x, bullet.y, bullet.img:getWidth(), bullet.img:getHeight()) then
+      table.remove(bullets, j)
+      table.remove(enemies, i)
+      score = score + 1
+    end
+  end
+
+  if CheckCollision(enemy.x, enemy.y, enemy.img:getWidth(), enemy.img:getHeight(), player.x, player.y, player.img:getWidth(), player.img:getHeight()) 
+  and isAlive then
+    table.remove(enemies, i)
+    isAlive = false
   end
 end
 
