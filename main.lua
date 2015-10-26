@@ -13,7 +13,6 @@ function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
          y2 < y1+h1
 end
 
-
 isAlive = true
 score = 0
 canShoot = true
@@ -27,7 +26,6 @@ bulletImg = nil
 
 enemies = {} -- array of current enemies on screen  
 bullets = {} -- array of current bullets being drawn and updated
-
 
 --LOAD--
 function love.load(arg)
@@ -114,11 +112,34 @@ for i, enemy in ipairs(enemies) do
   end
 end
 
+if not isAlive and love.keyboard.isDown('r') then
+  -- remove all our bullets and enemies from screen
+  bullets = {}
+  enemies = {}
+
+  -- reset timers
+  canShootTimer = canShootTimerMax
+  createEnemyTimer = createEnemyTimerMax
+
+  -- move player back to default position
+  player.x = 50
+  player.y = 710
+
+  -- reset our game state
+  score = 0
+  isAlive = true
+end
+
 end
 
 --DRAW--
 function love.draw(dt)
+  if isAlive then
   love.graphics.draw(player.img, player.x, player.y)
+else
+  love.graphics.print("Press 'R' to restart", love.graphics:getWidth()/2-50, love.graphics:getHeight()/2-10)
+end
+
   love.graphics.print( player.x, 0, 0 )
   love.graphics.print( player.y, 0, 10)
 --love.graphics.print( text, x, y, r, sx, sy, ox, oy, kx, ky )
@@ -127,6 +148,7 @@ function love.draw(dt)
 
   for i, enemy in ipairs(enemies) do
   love.graphics.draw(enemy.img, enemy.x, enemy.y)
+  love.graphics.print(score, 0, 50)
 end
 end
 end
