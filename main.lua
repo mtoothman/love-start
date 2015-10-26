@@ -25,5 +25,5 @@ function love.draw(dt)
   love.graphics.draw(player.img, player.x, player.y)
   love.graphics.print( player.x, 0, 0 )
   love.graphics.print( player.y, 0, 10)
-
+--love.graphics.print( text, x, y, r, sx, sy, ox, oy, kx, ky )
 end
